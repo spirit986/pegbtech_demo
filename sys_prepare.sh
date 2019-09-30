@@ -3,7 +3,7 @@
 ## General preparation of the system 
 ###
 
-SYS_HOSTNAME=pegbtech-web
+SYS_HOSTNAME=pegbtech-docker01
 
 ## Set the hostname
 hostnamectl set-hostname $SYS_HOSTNAME
@@ -13,7 +13,7 @@ echo "127.0.0.1 $SYS_HOSTNAME" >>/etc/hosts
 yum update -y --exclude=grub*
 
 # Disable SELINUX and reboot
-sed 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 
-
+reboot
 
