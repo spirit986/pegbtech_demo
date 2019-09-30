@@ -1,0 +1,12 @@
+#!/bin/bash
+###
+## Applicaion provisioning steps
+###
+
+yum install -y bzip2 npm wget git
+git clone https://github.com/erikras/react-redux-universal-hot-example.git pegbtech-demo
+
+cd pegbtech-demo && \
+npm install && \
+npm run build && \
+HOST=0.0.0.0 npm run start
