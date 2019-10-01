@@ -10,7 +10,7 @@ DOMAINS=(pegbtech-demo.tomspirit.me www.pegbtech-demo.tomspirit.me)
 RSA_KEY_SIZE=4096
 DATA_PATH="./pegb_web/pegb-certbot"
 EMAIL="tome.petkovski986@gmail.com" # Adding a valid address is strongly recommended
-STAGING=1 # Set to 1 if you're testing your setup to avoid hitting request limits
+STAGING=0 # Set to 1 if you're testing your setup to avoid hitting request limits
 
 # Nginx and certbot service names from docker-compose
 NGINX_SERVICE=pegb-proxy 
@@ -48,7 +48,6 @@ echo "### Starting nginx ..."
 /usr/local/bin/docker-compose up --force-recreate -d $NGINX_SERVICE
 echo
 
-exit 1
 
 echo "### Deleting dummy certificate for $DOMAINS ..."
 /usr/local/bin/docker-compose run --rm --entrypoint "\
