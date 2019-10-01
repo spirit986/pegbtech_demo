@@ -34,22 +34,22 @@ if [ ! -e "$DATA_PATH/conf/options-ssl-nginx.conf" ] || [ ! -e "$DATA_PATH/conf/
 fi
 
 echo "### Creating dummy certificate for $DOMAINS ..."
-PATH="/etc/letsencrypt/live/$DOMAINS"
-mkdir -p "$DATA_PATH/conf/live/$DOMAINS"
-docker-compose run --rm --entrypoint "\
+KEY_PATH="/etc/letsencrypt/live/$DOMAINS"
+/usr/bin/mkdir -p "$DATA_PATH/conf/live/$DOMAINS"
+/usr/local/bin/docker-compose run --rm --entrypoint "\
   openssl req -x509 -nodes -newkey rsa:1024 -days 1\
-    -keyout '$PATH/privkey.pem' \
-    -out '$PATH/fullchain.pem' \
+    -keyout '$KEY_PATH/privkey.pem' \
+    -out '$KEY_PATH/fullchain.pem' \
     -subj '/CN=localhost'" $CERTBOT_SERVICE
 echo
 
 
 echo "### Starting nginx ..."
-docker-compose up --force-recreate -d $NGINX_SERVICE
+/usr/local/bin/docker-compose up --force-recreate -d $NGINX_SERVICE
 echo
 
 echo "### Deleting dummy certificate for $DOMAINS ..."
-docker-compose run --rm --entrypoint "\
+/usr/local/bin/docker-compose run --rm --entrypoint "\
   rm -Rf /etc/letsencrypt/live/$DOMAINS && \
   rm -Rf /etc/letsencrypt/archive/$DOMAINS && \
   rm -Rf /etc/letsencrypt/renewal/$DOMAINS.conf" $CERTBOT_SERVICE
@@ -72,7 +72,7 @@ esac
 # Enable staging mode if needed
 if [ $STAGING != "0" ]; then staging_arg="--staging"; fi
 
-docker-compose run --rm --entrypoint "\
+/usr/local/bin/docker-compose run --rm --entrypoint "\
   certbot certonly --webroot -w /var/www/certbot \
     $staging_arg \
     $email_arg \
@@ -83,4 +83,4 @@ docker-compose run --rm --entrypoint "\
 echo
 
 echo "### Reloading nginx ..."
-docker-compose exec $NGINX_SERVICE nginx -s reload
+/usr/local/bin/docker-compose exec $NGINX_SERVICE nginx -s reload
