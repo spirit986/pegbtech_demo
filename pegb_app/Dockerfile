@@ -1,5 +1,5 @@
-## pegb_app
-## Setup pegbtech-demo app
+## pegb-app
+## Setup pegbtech-demo app container
 
 FROM centos:centos7
 
