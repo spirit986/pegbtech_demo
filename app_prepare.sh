@@ -1,6 +1,7 @@
 #!/bin/bash
 ###
 ## Applicaion provisioning steps
+## Use this script only to provision the applicaiton manually for testing
 ###
 
 yum install -y bzip2 npm wget git
