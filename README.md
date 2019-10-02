@@ -38,11 +38,16 @@ There are two playbooks for preparing the system: `sys_prepare_playbook.yml ` an
 
 1. Confirm that you can login without problems using `ssh root@<IP-ADDR-OF-TARGET-SYSTEM> -i <PATH/TO/YOUR/PRIVATE/KEY>`
 
-2. Execute `sys_prepare_playbook.yml`
+2. Update the `hosts` file in the main folder. Open the file with a text editor and update the IP address of the `pegbtech-docker01` host with the IP address of your target system.
+```
+pegbtech-docker01 ansible_host=<SET-THE-IP-OF-YOUR-TARGET-SYSTEM-HERE> ansible_user=root
+```
+
+3. Execute `sys_prepare_playbook.yml`
 ```
 ansible-playbook -i hosts --private-key=<PATH/TO/YOUR/PRIVATE/KEY> ./sys_prepare_playbook.yml
 ```
-3. Execute `docker_prepare_playbook.yml `
+4. Execute `docker_prepare_playbook.yml `
 ```
 ansible-playbook -i hosts --private-key=<PATH/TO/YOUR/PRIVATE/KEY> ./docker_prepare_playbook.yml 
 ```
