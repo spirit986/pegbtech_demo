@@ -44,10 +44,11 @@ Clone the repo on your own system:
 git clone https://github.com/spirit986/pegbtech_demo.git && cd pegbtech_demo
 ```
 
-### Prepare the target system system
+### Target system deployment
 There are two playbooks for preparing the system: `sys_prepare_playbook.yml ` and `docker_prepare_playbook.yml` in the parrent directory. Once you confirm that you can freely login to your target system using your private key execute the two playbooks against it. The playbooks will provision the system using some reccomended applications and then install docker and docker-compose.
 
 1. Confirm that you can login without problems using `ssh root@<IP-ADDR-OF-TARGET-SYSTEM> -i <PATH/TO/YOUR/PRIVATE/KEY>`
+
 2. Execute `sys_prepare_playbook.yml`
 ```
 ansible-playbook -i hosts --private-key=<PATH/TO/YOUR/PRIVATE/KEY> ./sys_prepare_playbook.yml
@@ -60,3 +61,6 @@ After these steps you should have your docker server ready for deployment. To ve
 ```
 docker -H ssh://root@<IP-ADDR-OF-TARGET-SYSTEM> run hello-world
 ```
+
+### Application deployment
+To deploy the application you will need to execute the docker-compose file
