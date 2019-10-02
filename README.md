@@ -9,7 +9,7 @@ This is a sample aplication utilizing Docker, Ansible and Bash to deploy a react
   * [pegb_app] - Where the application is packaged
   * [pegb_web] - For the web proxy. Consists of two containers
     * Nginx container for the proxy
-    * Certbpt container for the TLS
+    * Certbot container for the TLS
 
 ## Deployment steps
 
@@ -28,7 +28,7 @@ Host 172.16.0.108
   IdentityFile ~/.ssh/<YOUR-PRIVATE-KEY>
 ```
 
-3. Your own system with **ansible**, **git**, **docker** and **docker-compose** from where you will do the deployment. Docker and docker-compose are not mandatory for your system. However they are highly reccomended for the deployment phase. If you don't want to install docker on your system then for the deployment phase you will have to ssh into the target system and clone the repo there.
+3. Your own system with **ansible**, **git**, **docker** and **docker-compose** from where you will do the deployment. Docker and docker-compose are not mandatory for your system. However they are highly reccomended for the deployment phase. If you don't want to install docker on your system then for the deployment phase you will have to ssh into the target system, clone the repo there and execute the deployment steps.
 
 4. The target system must have access to the internet (obviously). If it is behind NAT make sure that port 80 and 443 are forwarded to it otherwise letsencrypt will fail.
 ```
@@ -63,4 +63,4 @@ docker -H ssh://root@<IP-ADDR-OF-TARGET-SYSTEM> run hello-world
 ```
 
 ### Application deployment
-To deploy the application you will need to execute the docker-compose file
+To deploy the application you will need to execute the docker-compose file against your target system.
