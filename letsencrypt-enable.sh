@@ -9,7 +9,7 @@ fi
 DOMAINS=(pegbtech-demo.tomspirit.me www.pegbtech-demo.tomspirit.me)
 RSA_KEY_SIZE=4096
 DATA_PATH="./pegb_web/pegb-certbot"
-EMAIL="tome.petkovski986@gmail.com" # Adding a valid address is strongly recommended
+EMAIL="your_email@domain.com" # Adding a valid address is strongly recommended
 STAGING=1 # Set to 1 if you're testing your setup to avoid hitting request limits
 ASK=0 # Setting this to 0 makes the script non-interactive
 
@@ -30,6 +30,9 @@ then
 			exit
 		fi
 	fi
+else
+	echo "Non-interactive mode has been enabled. The script will resume on its own in 5 secs. Press CTRL+C to cancel!"
+	sleep 5
 fi
 
 
@@ -71,7 +74,8 @@ then
   	rm -Rf /etc/letsencrypt/renewal/$DOMAINS.conf" $CERTBOT_SERVICE
 	echo
 else
-	echo "### STAGING mote set, moving on ..."
+	echo "### STAGING mode has been enabled, moving on ..."
+	echo
 fi
 
 
