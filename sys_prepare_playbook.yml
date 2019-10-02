@@ -18,7 +18,7 @@
         description: EPEL YUM repo
         baseurl: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
 
-    - name: Install additional usefull packages
+    - name: Install additional useful packages
       yum:
         name: "{{ packages }}"
         state: latest
@@ -40,6 +40,7 @@
           - curl
           - git
           - vim
+          - tcpdump
 
     - name: Reboot the system
       reboot:
