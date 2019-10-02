@@ -14,7 +14,7 @@ This is a sample aplication utilizing Docker, Ansible and Bash to quickly provis
 ## Deployment steps
 In general the deployment is done in two phases. 
 * **Target system provisioning** phase, where the docker server is provisioned automatically; 
-* **Application deployment** phase to deploy the application. This is to ensure the applications's portability. With this approach once you have the target system ready for provisioning the entire operation is done in less than 10mins.
+* **Application deployment** phase to deploy the application. This is to ensure the applications's portability. With this approach once you have the target system ready for provisioning the entire operation is done in about 15mins out of which the applicaiton building step takes most of the time.
 
 ### Terminology
 * **Own system** - Your own linux system from where you will do most of the work;
