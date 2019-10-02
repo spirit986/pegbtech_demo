@@ -8,10 +8,13 @@ This is a sample aplication utilizing Docker, Ansible and Bash to deploy a react
 * Docker and docker-compose
   * [pegb_app] - Where the application is packaged
   * [pegb_web] - For the web proxy. Consists of two containers
-    * Nginx container for the proxy
-    * Certbot container for the TLS
+    * [pegb-proxy] - Nginx container for the proxy
+    * [pegb-certbot] - Certbot container for the TLS
 
 ## Deployment steps
+In general the deployment is done in two phases. 
+* ***Target system provisioning*** phase, where the docker server is provisioned automatically; 
+* ***Application deployment*** phase to deploy the application. This is to ensure the applications's portability. With this approach once you have the target system ready for provisioning the entire operation is done in less than 10mins.
 
 ### Terminology
 * **Own system** - Your own linux system from where you will do most of the work;
@@ -20,23 +23,9 @@ This is a sample aplication utilizing Docker, Ansible and Bash to deploy a react
 ### Prerequisites
 Make sure the prerequisites are met:
 1. Fresh CentOS7 installation for the target system (currently only CentOS7 is supported);
-
-2. Public/private key authentication with the target system;
-   * It is a good idea to update your `~/.ssh/config` file with the private key for your target system. This will allow dockercli to be used remotely during the deployment phase.
-```
-Host 172.16.0.108
-  IdentityFile ~/.ssh/<YOUR-PRIVATE-KEY>
-```
-
-3. Your own system with **ansible**, **git**, **docker** and **docker-compose** from where you will do the deployment. Docker and docker-compose are not mandatory for your system. However they are highly reccomended for the deployment phase. If you don't want to install docker on your system then for the deployment phase you will have to ssh into the target system, clone the repo there and execute the deployment steps.
-
+2. A test domain name with A and CNAME (www) records pointed to your target system's public IP address. Otherwise letsencrypt will not work; 
+3. Your own system with **ansible** and **git**, from where you will do the deployment.
 4. The target system must have access to the internet (obviously). If it is behind NAT make sure that port 80 and 443 are forwarded to it otherwise letsencrypt will fail.
-```
-## Install Ansible on your own system
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
-     python get-pip.py && \
-	 pip install ansible --upgrade
-```
 
 ### Clone the repo
 Clone the repo on your own system:
@@ -44,7 +33,7 @@ Clone the repo on your own system:
 git clone https://github.com/spirit986/pegbtech_demo.git && cd pegbtech_demo
 ```
 
-### Target system deployment
+### Target system provisioning
 There are two playbooks for preparing the system: `sys_prepare_playbook.yml ` and `docker_prepare_playbook.yml` in the parrent directory. Once you confirm that you can freely login to your target system using your private key execute the two playbooks against it. The playbooks will provision the system using some reccomended applications and then install docker and docker-compose.
 
 1. Confirm that you can login without problems using `ssh root@<IP-ADDR-OF-TARGET-SYSTEM> -i <PATH/TO/YOUR/PRIVATE/KEY>`
@@ -57,10 +46,21 @@ ansible-playbook -i hosts --private-key=<PATH/TO/YOUR/PRIVATE/KEY> ./sys_prepare
 ```
 ansible-playbook -i hosts --private-key=<PATH/TO/YOUR/PRIVATE/KEY> ./docker_prepare_playbook.yml 
 ```
-After these steps you should have your docker server ready for deployment. To veryfy the installation is successfull simply run from your own system:
-```
-docker -H ssh://root@<IP-ADDR-OF-TARGET-SYSTEM> run hello-world
-```
+After these steps you should have your docker server ready for the application deployment.
+
 
 ### Application deployment
-To deploy the application you will need to execute the docker-compose file against your target system.
+1. Once you login to the target system confirm that docker is properly installed by running a simple hello-world container: `docker run hello-world`;
+2. Clone this git repo preferably into your home folder.
+```
+git clone https://github.com/spirit986/pegbtech_demo.git && cd pegbtech_demo
+```
+3. Deploy the application using:
+```
+docker-compose up -d
+```
+4. Enable TLS. Once the application is deployed if you issue a `docker ps -a` you will notice that the nginx container `pegb-proxy` is down. This is because nginx is missing the required certificates. To generate the certificates use the `letsencrypt-enable.sh` script which will enable TLS according to Let's Encrypt best-practice. This is requred only once after which the certbot container will renew its certificate accordingly.
+     * ***Final note on step 4*** - If you simply wish to test the TLS and skip the real certificate generation simply edit the `letsencrypt-enable.sh` script and set the `STAGING=1`. This way the certificate generation will be tested, but Let's Encrypt will not issue a real certificate.
+ 5. Test your application 
+     * For a simple test simply browse http://yourdomain.com. You should be redirected to https://yourdomain.com and the application will open.
+     * To test SSL browse to https://www.sslshopper.com and enter the URL of your application for which you should receive a straight A for it.
