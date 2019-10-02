@@ -1,0 +1,43 @@
+---
+- hosts: pegbtech-docker01
+  remote_user: root
+
+  tasks:
+
+    - name: Execute sys_prepare.sh
+      command: sh sys_prepare.sh
+
+    - name: Upgrade the system
+      yum:
+        name: '*'
+        state: latest
+
+    - name: Add the EPEL repo
+      yum_repository:
+        name: epel
+        baseurl: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
+
+    - name: Install additional usefull packages
+      yum:
+        name: "{{ packages }}"
+        state: latest
+      vars:
+        packages:
+          - yum-utils
+          - mc
+          - lynx
+          - net-tools
+          - curl
+          - wget
+          - binutils
+          - bzip2
+          - coreutils
+          - mlocate
+          - htop
+          - nmon
+          - curl
+          - git
+
+    - name: Reboot the system
+      reboot:
+...

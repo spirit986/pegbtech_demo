@@ -1,6 +1,8 @@
 #!/bin/bash
 
 ## Setup docker for centos
+## Steps for setting up docker manually.
+## This script is for testing purposes. Use the ansible playbooks provided istead.
 
 
 # Install required packages
