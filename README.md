@@ -63,8 +63,11 @@ docker-compose build
 ##Deploy the containers
 docker-compose up -d
 ```
-4. Enable TLS. Once the application is deployed if you issue a `docker ps -a` you will notice that the nginx container `pegb-proxy` is down. This is because nginx is missing the required certificates. To generate the certificates use the `letsencrypt-enable.sh` script which will enable TLS according to Let's Encrypt best-practice. This is requred only once after which the certbot container will renew its certificate accordingly.
-     * ***Final note on step 4*** - If you simply wish to test the TLS and skip the real certificate generation simply edit the `letsencrypt-enable.sh` script and set the `STAGING=1`. This way the certificate generation will be tested, but Let's Encrypt will not issue a real certificate.
+4. **Enable TLS**. Once the application is deployed if you issue a `docker ps -a` you will notice that the nginx container `pegb-proxy` is down. This is because nginx is missing the required certificates. To generate the certificates use the `letsencrypt-enable.sh` script which will enable TLS according to Let's Encrypt best-practice. This is requred only once after which the certbot container will renew its certificate accordingly.
+     * **BEFORE YOU EXECUTE THE SCRIPT** - If you simply wish to test the TLS and skip the real certificate generation simply edit the `letsencrypt-enable.sh` script and set the `STAGING=1`. This way the certificate generation will be tested, but Let's Encrypt will not issue a real certificate.
+     * Edit the script and set the EMAIL variable to your email;
+     * Optionally set the STAGING=1 to just test against Let's Encrypt and skip the actual certificate generation;
+     * Execute the script using `./letsencrypt-enable.sh`;
  5. Test your application 
      * For a simple test simply browse http://yourdomain.com. You should be redirected to https://yourdomain.com and the application will open.
      * To test SSL browse to https://www.sslshopper.com and enter the URL of your application for which you should receive a straight A for it.
