@@ -1,6 +1,6 @@
 # [pegbtech_demo] React_redux demo application with IaaS example
 
-This is a sample aplication utilizing Docker, Ansible and Bash to deploy a react_redux applicaiton from https://github.com/erikras/react-redux-universal-hot-example
+This is a sample aplication utilizing Docker, Ansible and Bash to quickly provision a server and deploy a react_redux applicaiton from https://github.com/erikras/react-redux-universal-hot-example
 
 ## Technologies used
 * Bash - For general scripting
