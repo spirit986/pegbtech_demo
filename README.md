@@ -13,8 +13,8 @@ This is a sample aplication utilizing Docker, Ansible and Bash to deploy a react
 
 ## Deployment steps
 In general the deployment is done in two phases. 
-* ***Target system provisioning*** phase, where the docker server is provisioned automatically; 
-* ***Application deployment*** phase to deploy the application. This is to ensure the applications's portability. With this approach once you have the target system ready for provisioning the entire operation is done in less than 10mins.
+* **Target system provisioning** phase, where the docker server is provisioned automatically; 
+* **Application deployment** phase to deploy the application. This is to ensure the applications's portability. With this approach once you have the target system ready for provisioning the entire operation is done in less than 10mins.
 
 ### Terminology
 * **Own system** - Your own linux system from where you will do most of the work;
@@ -55,8 +55,12 @@ After these steps you should have your docker server ready for the application d
 ```
 git clone https://github.com/spirit986/pegbtech_demo.git && cd pegbtech_demo
 ```
-3. Deploy the application using:
+3. Deploy the application:
 ```
+## Build the containers
+docker-compose build
+
+##Deploy the containers
 docker-compose up -d
 ```
 4. Enable TLS. Once the application is deployed if you issue a `docker ps -a` you will notice that the nginx container `pegb-proxy` is down. This is because nginx is missing the required certificates. To generate the certificates use the `letsencrypt-enable.sh` script which will enable TLS according to Let's Encrypt best-practice. This is requred only once after which the certbot container will renew its certificate accordingly.

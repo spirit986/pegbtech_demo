@@ -39,6 +39,7 @@
           - nmon
           - curl
           - git
+          - vim
 
     - name: Reboot the system
       reboot:
