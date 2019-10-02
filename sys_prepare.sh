@@ -3,7 +3,9 @@
 ## General preparation of the system 
 ###
 
+# Set the desired hostname for the target system here
 SYS_HOSTNAME=pegbtech-docker01
+
 SELF=$(basename "$0")
 
 logger "$(date "+%FT%T") - $SELF - $(who) - This script will set the system hostname to $SYS_HOSTNAME, and disable SELinux"
