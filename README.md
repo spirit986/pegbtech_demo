@@ -22,7 +22,7 @@ Make sure the prerequisites are met:
 1. Fresh CentOS7 installation for the target system (currently only CentOS7 is supported);
 
 2. Public/private key authentication with the target system;
-  * It is a good idea to update your `~/.ssh/config` file with the private key for your target system. This will allow dockercli to be used remotely during the deployment phase.
+   * It is a good idea to update your `~/.ssh/config` file with the private key for your target system. This will allow dockercli to be used remotely during the deployment phase.
 ```
 Host 172.16.0.108
   IdentityFile ~/.ssh/<YOUR-PRIVATE-KEY>
