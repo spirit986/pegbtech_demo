@@ -18,3 +18,5 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config && \
 /sbin/setenforce 0
 #systemctl reboot
 
+echo "sys_prepare.sh has been executed" >> /root/executed-sys_prepare.sh.txt
+

@@ -1,5 +1,5 @@
 [all:vars]
 ansible_conneciton = ssh
 
-[docker-hosts]
+[docker_hosts]
 pegbtech-docker01 ansible_host=172.16.0.108 ansible_user=root

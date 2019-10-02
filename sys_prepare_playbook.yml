@@ -5,7 +5,7 @@
   tasks:
 
     - name: Execute sys_prepare.sh
-      command: sh sys_prepare.sh
+      script: sys_prepare.sh --creates /root/executed-sys_prepare.sh.txt
 
     - name: Upgrade the system
       yum:
@@ -15,12 +15,14 @@
     - name: Add the EPEL repo
       yum_repository:
         name: epel
+        description: EPEL YUM repo
         baseurl: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
 
     - name: Install additional usefull packages
       yum:
         name: "{{ packages }}"
         state: latest
+        disable_gpg_check: yes
       vars:
         packages:
           - yum-utils
