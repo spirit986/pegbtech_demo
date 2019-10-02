@@ -11,6 +11,7 @@ RSA_KEY_SIZE=4096
 DATA_PATH="./pegb_web/pegb-certbot"
 EMAIL="tome.petkovski986@gmail.com" # Adding a valid address is strongly recommended
 STAGING=1 # Set to 1 if you're testing your setup to avoid hitting request limits
+ASK=0 # Setting this to 0 makes the script non-interactive
 
 ## Nginx and certbot service names from docker-compose
 NGINX_SERVICE=pegb-proxy 
@@ -18,13 +19,16 @@ CERTBOT_SERVICE=pegb-certbot
 
 
 ## Ask the user to confirm if he wishes to delete the current certificates in $DATA_PATH
-if [ -d "$DATA_PATH" ]
+if [[ $ASK -ne 0 ]]
 then
-	read -p "Existing certificate domains found for: $DOMAINS. Continue and replace existing certificates? (y/N) " decision
-	
-	if [ "$decision" != "Y" ] && [ "$decision" != "y" ]
+	if [ -d "$DATA_PATH" ]
 	then
-		exit
+		read -p "By proceeding and answering Y the script will replace any existing certificates for $DOMAINS. Continue and replace existing certificates? (y/N) " decision
+	
+		if [ "$decision" != "Y" ] && [ "$decision" != "y" ]
+		then
+			exit
+		fi
 	fi
 fi
 
@@ -38,6 +42,7 @@ then
 	curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot/ssl-dhparams.pem > "$DATA_PATH/conf/ssl-dhparams.pem"
 	echo
 fi
+
 
 ## Creating dummy certificate to allow nginx to start
 echo "### Creating dummy certificate for $DOMAINS ..."
@@ -54,6 +59,7 @@ echo
 echo "### Starting nginx ..."
 /usr/local/bin/docker-compose up --force-recreate -d $NGINX_SERVICE
 echo
+
 
 ## If staging is set to other than 0 the dummy certificates created previously will not be deleted
 if [[ $STAGING -eq 0 ]]
@@ -85,6 +91,7 @@ case "$EMAIL" in
   *) email_arg="--email $EMAIL" ;;
 esac
 
+
 # Enable staging mode if needed
 if [ $STAGING != "0" ]; then staging_arg="--staging"; fi
 
@@ -99,5 +106,7 @@ if [ $STAGING != "0" ]; then staging_arg="--staging"; fi
     --force-renewal" $CERTBOT_SERVICE
 echo
 
+
 echo "### Reloading nginx ..."
 /usr/local/bin/docker-compose exec $NGINX_SERVICE nginx -s reload
+
