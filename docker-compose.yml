@@ -52,6 +52,18 @@ services:
     networks:
       - pegbnet
 
+   # Pegtech-demo api
+  pegb_api:
+    container_name: pegb-api
+    image: pegb-api:latest
+    ports:
+      - "5000:5000"
+    build:
+      context: pegb_api
+    restart: always
+    networks:
+      - pegbnet
+
 networks:
   pegbnet:
 ...
