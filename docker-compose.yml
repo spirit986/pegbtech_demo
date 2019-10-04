@@ -52,14 +52,32 @@ services:
     networks:
       - pegbnet
 
-   # Pegtech-demo api
-  pegb_api:
+  # Pegtech-demo api
+  pegb-api:
     container_name: pegb-api
     image: pegb-api:latest
     ports:
       - "5000:5000"
     build:
       context: pegb_api
+    restart: always
+    links:
+      - pegb-db
+    networks:
+      - pegbnet
+  
+  # Pegtech-demo database
+  pegb-db:
+    environment:
+      - "MONGO_INITDB_ROOT_USERNAME=mongoadmin"
+      - "MONGO_INITDB_ROOT_PASSWORD=secret"
+    container_name: pegb-db
+    image: mongo:4.0-xenial
+    ports:
+      - "27017:27017"
+    volumes:
+      - "$PWD/pegb_db/dbdata:/data/db"
+      #- "$PWD/pegb-db/mongo.conf:/etc/mongo.conf"
     restart: always
     networks:
       - pegbnet
