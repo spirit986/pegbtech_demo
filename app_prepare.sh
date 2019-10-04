@@ -5,7 +5,7 @@
 ###
 
 yum install -y bzip2 npm wget git
-git clone https://github.com/erikras/react-redux-universal-hot-example.git pegbtech-demo
+git clone https://github.com/spirit986/react-redux-universal-hot-example.git pegbtech-demo
 
 cd pegbtech-demo && \
 npm install && \
