@@ -1,6 +1,11 @@
 pegb_web/pegb-certbot/conf/
 !pegb_web/pegb-certbot/conf/README.md
 
+pegb_db/dbdata/
+
+
+
+### PYTHON FLASK
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
