@@ -12,7 +12,7 @@ RUN curl --silent --location https://rpm.nodesource.com/setup_6.x | bash -
 
 RUN yum install -y --nogpgcheck nodejs gcc-c++ make 
 
-RUN git clone https://github.com/erikras/react-redux-universal-hot-example.git /opt/pegbtech-demo
+RUN git clone https://github.com/spirit986/react-redux-universal-hot-example.git /opt/pegbtech-demo
 
 WORKDIR /opt/pegbtech-demo
 
