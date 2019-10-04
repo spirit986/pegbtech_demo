@@ -2,6 +2,9 @@
 
 This is a sample aplication utilizing Docker, Ansible and Bash to quickly provision a server and deploy a react_redux applicaiton from https://github.com/erikras/react-redux-universal-hot-example
 
+##### IMPORTANT NOTE
+To protect this project from breaking because of unintended commits to the original project of erikras (the link above), his repo was forked into a repo of my own: https://github.com/spirit986/react-redux-universal-hot-example. This project makes its deployments form the forked repo.
+
 ## Technologies used
 * Bash - For general scripting
 * Ansible - For the IaaS part and provisioning the host 
@@ -10,6 +13,8 @@ This is a sample aplication utilizing Docker, Ansible and Bash to quickly provis
   * [pegb_web] - For the web proxy. Consists of two containers
     * [pegb-proxy] - Nginx container for the proxy
     * [pegb-certbot] - Certbot container for the TLS
+* Python Flask - For creating a simple API backend for demonstration;
+* MongoDB - For implementing a simple database for the backend to talk to for demonstration;
 
 ## Deployment steps
 In general the deployment is done in two phases. 
