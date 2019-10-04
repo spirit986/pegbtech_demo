@@ -11,10 +11,10 @@ To protect this project from breaking because of unintended commits to the origi
 * Python Flask - To provision a simple API backend;
 * MongoDB - For implementing a simple database;
 * Docker and docker-compose
-  * [pegb_app] - Where the application is packaged
-  * [pegb_web] - For the web proxy. Consists of two containers
-    * [pegb-proxy] - Nginx container for the proxy
-    * [pegb-certbot] - Certbot container for the TLS
+  * [pegb_app] - Where the application is packaged;
+  * [pegb_web] - For the web proxy. Consists of two containers;
+    * [pegb-proxy] - Nginx container for the proxy;
+    * [pegb-certbot] - Certbot container for the TLS;
   * [pegb_api] - Python Flask - A simple API backend for demonstration;
   * [pegb_db] - MongoDB - A simple database for the backend to talk to;
 
@@ -25,14 +25,14 @@ In general the deployment is done in two phases.
 
 ### Terminology
 * **Own system** - Your own linux system from where you will do most of the work;
-* **Target system** - The system which will serve as a host for the application. In this excersize it is called `pegbtech-docker01`.
+* **Target system** - The system which will serve as a host for the application. In this excersize it is called `pegbtech-docker01`;
 * To avoid confusion, keep in mind that the container project folder names are written with underscores (pegb_app, pegb_web etc..) while the container names and the service names within `docker-compose.yml` are written with dashes (pegb-app, pegb-web etc).
 
 ### Prerequisites
 Make sure the prerequisites are met:
 1. Fresh CentOS7 installation for the target system (currently only CentOS7 is supported);
 2. A test domain name with A and CNAME (www) records pointed to your target system's public IP address. Otherwise letsencrypt will not work; 
-3. Your own system with **ansible** and **git**, from where you will do the deployment.
+3. Your own system with **ansible** and **git**, from where you will do the deployment;
 4. The target system must have access to the internet (obviously). If it is behind NAT make sure that port 80 and 443 are forwarded to it otherwise letsencrypt will fail.
 
 ### Clone the repo
@@ -44,18 +44,18 @@ git clone https://github.com/spirit986/pegbtech_demo.git && cd pegbtech_demo
 ### Target system provisioning
 There are two playbooks for preparing the system: `sys_prepare_playbook.yml ` and `docker_prepare_playbook.yml` in the parrent directory. Once you confirm that you can freely login to your target system using your private key execute the two playbooks against it. The playbooks will provision the system using some reccomended applications and then install docker and docker-compose.
 
-1. Confirm that you can login without problems using `ssh root@<IP-ADDR-OF-TARGET-SYSTEM> -i <PATH/TO/YOUR/PRIVATE/KEY>`
+1. Confirm that you can login without problems using `ssh root@<IP-ADDR-OF-TARGET-SYSTEM> -i <PATH/TO/YOUR/PRIVATE/KEY>`;
 
-2. Update the `hosts` file in the main folder. Open the file with a text editor and update the IP address of the `pegbtech-docker01` host with the IP address of your target system.
+2. Update the `hosts` file in the main folder. Open the file with a text editor and update the IP address of the `pegbtech-docker01` host with the IP address of your target system;
 ```
 pegbtech-docker01 ansible_host=<SET-THE-IP-OF-YOUR-TARGET-SYSTEM-HERE> ansible_user=root
 ```
 
-3. Execute `sys_prepare_playbook.yml`
+3. Execute `sys_prepare_playbook.yml`;
 ```
 ansible-playbook -i hosts --private-key=<PATH/TO/YOUR/PRIVATE/KEY> ./sys_prepare_playbook.yml
 ```
-4. Execute `docker_prepare_playbook.yml `
+4. Execute `docker_prepare_playbook.yml `;
 ```
 ansible-playbook -i hosts --private-key=<PATH/TO/YOUR/PRIVATE/KEY> ./docker_prepare_playbook.yml 
 ```
@@ -64,11 +64,11 @@ After these steps you should have your docker server ready for the application d
 
 ### Application deployment
 1. Once you login to the target system confirm that docker is properly installed by running a simple hello-world container: `docker run hello-world`;
-2. Clone this git repo preferably into your home folder.
+2. Clone this git repo preferably into your home folder;
 ```
 git clone https://github.com/spirit986/pegbtech_demo.git && cd pegbtech_demo
 ```
-3. Deploy the application:
+3. Deploy the application;
 ```
 ## Build the containers
 docker-compose build
@@ -77,10 +77,11 @@ docker-compose build
 docker-compose up -d
 ```
 4. **Enable TLS**. Once the application is deployed if you issue a `docker ps -a` you will notice that the nginx container `pegb-proxy` is down. This is because nginx is missing the required certificates. To generate the certificates use the `letsencrypt-enable.sh` script which will enable TLS according to Let's Encrypt best-practice. This is requred only once after which the certbot container will renew its certificate accordingly.
-     * **BEFORE YOU EXECUTE THE SCRIPT** - If you simply wish to test the TLS and skip the real certificate generation simply edit the `letsencrypt-enable.sh` script and set the `STAGING=1`. This way the certificate generation will be tested, but Let's Encrypt will not issue a real certificate.
+     * **BEFORE YOU EXECUTE THE SCRIPT** - If you simply wish to test the TLS and skip the real certificate generation simply edit the `letsencrypt-enable.sh` script and set the `STAGING=1`. This way the certificate generation will be tested, but Let's Encrypt will not issue a real certificate;
      * Edit the script and set the EMAIL variable to your email;
      * Optionally set the STAGING=1 to just test against Let's Encrypt and skip the actual certificate generation;
      * Execute the script using `./letsencrypt-enable.sh`;
- 5. Test your application 
-     * For a simple test simply browse http://yourdomain.com. You should be redirected to https://yourdomain.com and the application will open.
+ 5. Test your application
+     * For a simple test simply browse http://yourdomain.com. You should be redirected to https://yourdomain.com and the application will open;
      * To test SSL browse to https://www.sslshopper.com and enter the URL of your application for which you should receive a straight A for it.
+     * To test the API browse to http://yourdomain.com:5000. You can test its DB connectivity by calling `GET /users` or `GET /posts` and list the posts or users within it.
