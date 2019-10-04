@@ -10,6 +10,8 @@ This is a sample aplication utilizing Docker, Ansible and Bash to quickly provis
   * [pegb_web] - For the web proxy. Consists of two containers
     * [pegb-proxy] - Nginx container for the proxy
     * [pegb-certbot] - Certbot container for the TLS
+* Python Flask - For creating a simple API backend for demonstration;
+* MongoDB - For implementing a simple database for the backend to talk to for demonstration;
 
 ## Deployment steps
 In general the deployment is done in two phases. 
