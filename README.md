@@ -6,15 +6,17 @@ This is a sample aplication utilizing Docker, Ansible and Bash to quickly provis
 To protect this project from breaking because of unintended commits to the original project of erikras (the link above), his repo was forked into a repo of my own: https://github.com/spirit986/react-redux-universal-hot-example. This project makes its deployments form the forked repo.
 
 ## Technologies used
-* Bash - For general scripting
-* Ansible - For the IaaS part and provisioning the host 
+* Bash - For general scripting;
+* Ansible - For the IaaS part and provisioning the host;
+* Python Flask - To provision a simple API backend;
+* MongoDB - For implementing a simple database;
 * Docker and docker-compose
   * [pegb_app] - Where the application is packaged
   * [pegb_web] - For the web proxy. Consists of two containers
     * [pegb-proxy] - Nginx container for the proxy
     * [pegb-certbot] - Certbot container for the TLS
-* Python Flask - For creating a simple API backend for demonstration;
-* MongoDB - For implementing a simple database for the backend to talk to for demonstration;
+  * [pegb_api] - Python Flask - A simple API backend for demonstration;
+  * [pegb_db] - MongoDB - A simple database for the backend to talk to;
 
 ## Deployment steps
 In general the deployment is done in two phases. 
@@ -23,7 +25,8 @@ In general the deployment is done in two phases.
 
 ### Terminology
 * **Own system** - Your own linux system from where you will do most of the work;
-* **Target system** - The system which will serve as a host for the application. In this excersize it is called pegbtech-docker01.
+* **Target system** - The system which will serve as a host for the application. In this excersize it is called `pegbtech-docker01`.
+* To avoid confusion, keep in mind that the container project folder names are written with underscores (pegb_app, pegb_web etc..) while the container names and the service names within `docker-compose.yml` are written with dashes (pegb-app, pegb-web etc).
 
 ### Prerequisites
 Make sure the prerequisites are met:
