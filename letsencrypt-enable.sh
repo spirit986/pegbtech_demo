@@ -1,17 +1,12 @@
 #!/bin/bash
 
-if ! [ -x "$(command -v docker-compose)" ]; then
-  echo 'Error: docker-compose is not installed.' >&2
-  exit 1
-fi
-
-
+## The www domain should go second
 DOMAINS=(pegbtech-demo.tomspirit.me www.pegbtech-demo.tomspirit.me)
 RSA_KEY_SIZE=4096
 DATA_PATH="./pegb_web/pegb-certbot"
-EMAIL="your_email@domain.com" # Adding a valid address is strongly recommended
-STAGING=0 # Set to 1 if you're testing your setup to avoid hitting request limits
-ASK=0 # Setting this to 0 makes the script non-interactive
+EMAIL="your_email@domain.com" 
+STAGING=0 ## Set to 1 if you're testing your setup to avoid hitting request limits
+ASK=0 ## Setting this to 0 makes the script non-interactive
 
 ## Nginx and certbot service names from docker-compose
 NGINX_SERVICE=pegb-proxy 
@@ -58,7 +53,6 @@ KEY_PATH="/etc/letsencrypt/live/$DOMAINS"
     -subj '/CN=localhost'" $CERTBOT_SERVICE
 echo
 
-
 echo "### Starting nginx ..."
 /usr/local/bin/docker-compose up --force-recreate -d $NGINX_SERVICE
 echo
@@ -74,14 +68,14 @@ then
   	rm -Rf /etc/letsencrypt/renewal/$DOMAINS.conf" $CERTBOT_SERVICE
 	echo
 else
-	echo "### STAGING mode has been enabled, moving on ..."
+	echo "### STAGING mode has been enabled, the dummy certificates will not be removed, moving on ..."
 	echo
 fi
 
 
 ## Request the certificate
 echo "### Requesting Let's Encrypt certificate for $DOMAINS ..."
-#Join $DOMAINS to -d args
+## Join $DOMAINS to -d args
 domain_args=""
 for domain in "${DOMAINS[@]}"
 do
@@ -89,14 +83,14 @@ do
 done
 
 
-# Select appropriate email arg
+## Select appropriate email arg
 case "$EMAIL" in
   "") email_arg="--register-unsafely-without-email" ;;
   *) email_arg="--email $EMAIL" ;;
 esac
 
 
-# Enable staging mode if needed
+## Enable staging mode if needed
 if [ $STAGING != "0" ]; then staging_arg="--staging"; fi
 
 /usr/local/bin/docker-compose run --rm --entrypoint "\
