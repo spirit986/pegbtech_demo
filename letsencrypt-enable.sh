@@ -1,11 +1,15 @@
 #!/bin/bash
 
 ## The www domain should go second
-DOMAINS=(pegbtech-demo.tomspirit.me www.pegbtech-demo.tomspirit.me)
+DOMAINS=(react-redux-example.tomspirit.me www.react-redux-example.tomspirit.me)
+NGINX_CONFIG_FILE="${DOMAINS[0]}.conf" ## The NGINX config file will be named based on this value
+
 RSA_KEY_SIZE=4096
 DATA_PATH="./pegb_web/pegb-certbot"
-EMAIL="your_email@domain.com" 
-STAGING=0 ## Set to 1 if you're testing your setup to avoid hitting request limits
+NGINX_PATH="./pegb_web/pegb-proxy/nginx" # NGINX configuration will be generated here
+
+EMAIL="" ## Setting a valid email is reccomended
+STAGING=1 ## Set to 1 if you're testing your setup to avoid hitting request limits
 ASK=0 ## Setting this to 0 makes the script non-interactive
 
 ## Nginx and certbot service names from docker-compose
@@ -45,13 +49,55 @@ fi
 ## Creating dummy certificate to allow nginx to start
 echo "### Creating dummy certificate for $DOMAINS ..."
 KEY_PATH="/etc/letsencrypt/live/$DOMAINS"
-/usr/bin/mkdir -p "$DATA_PATH/conf/live/$DOMAINS"
+mkdir -p "$DATA_PATH/conf/live/$DOMAINS"
 /usr/local/bin/docker-compose run --rm --entrypoint "\
-  openssl req -x509 -nodes -newkey rsa:1024 -days 1\
+  openssl req -x509 -nodes -newkey rsa:1024 -days 365\
     -keyout '$KEY_PATH/privkey.pem' \
     -out '$KEY_PATH/fullchain.pem' \
     -subj '/CN=localhost'" $CERTBOT_SERVICE
 echo
+
+
+## Generate the new NGINX Config
+echo "### Generating the NGINX config for $DOMAINS"
+cat >"$NGINX_PATH/$NGINX_CONFIG_FILE" <<EOF
+upstream pegb-app {
+    server pegb-app:8080;
+}
+
+server {
+    listen 80;
+    server_name ${DOMAINS[0]} ${DOMAINS[1]};
+
+    location /.well-known/acme-challenge/ {
+        allow all;
+        root /var/www/certbot;
+    }
+
+    location / {
+        allow all;
+        return 301 https://\$host\$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    server_name ${DOMAINS[0]} ${DOMAINS[1]};
+
+    # Letsencrypt
+    ssl_certificate /etc/letsencrypt/live/${DOMAINS[0]}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAINS[0]}/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    location / {
+        allow all;
+        proxy_pass http://pegb-app;
+    }
+}
+EOF
+echo
+
 
 echo "### Starting nginx ..."
 /usr/local/bin/docker-compose up --force-recreate -d $NGINX_SERVICE
@@ -107,4 +153,10 @@ echo
 
 echo "### Reloading nginx ..."
 /usr/local/bin/docker-compose exec $NGINX_SERVICE nginx -s reload
+echo
+
+sleep 3
+
+echo "### All done! Browse to https://${DOMAINS[0]} to see your website!"
+echo
 

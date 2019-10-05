@@ -1,6 +1,8 @@
 pegb_web/pegb-certbot/conf/
 !pegb_web/pegb-certbot/conf/README.md
 
+## Since the database is prepopulated we do not want any new info to be commited
+pegb_db/dbdata/
 
 ### PYTHON FLASK
 # Byte-compiled / optimized / DLL files
