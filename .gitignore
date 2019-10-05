@@ -1,6 +1,9 @@
 pegb_web/pegb-certbot/conf/
 !pegb_web/pegb-certbot/conf/README.md
 
+pegb_web/pegb-proxy/nginx/
+!pegb_web/pegb-proxy/nginx/dummy.conf
+
 ## Since the database is prepopulated we do not want any new info to be commited
 pegb_db/dbdata/
 
