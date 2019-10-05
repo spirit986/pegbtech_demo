@@ -1,2 +1,2 @@
-/etc/letsencrypt
+Will be mounted in `/etc/letsencrypt`
 
