@@ -1,7 +1,7 @@
 #!/bin/bash
 
-## The www domain should go second
-DOMAINS=(react-redux-example.tomspirit.me www.react-redux-example.tomspirit.me)
+## The www subdomain should go second
+DOMAINS=(subdomain.domain.com www.subdomain.domain.com)
 NGINX_CONFIG_FILE="${DOMAINS[0]}.conf" ## The NGINX config file will be named based on this value
 
 RSA_KEY_SIZE=4096
