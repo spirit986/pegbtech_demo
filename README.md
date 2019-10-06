@@ -1,9 +1,52 @@
 # [pegbtech_demo] React_redux demo application with IaaS example (in 15mins or less)
 
-This is a sample aplication utilizing Docker, Ansible and Bash to quickly provision a server and deploy a react_redux applicaiton from https://github.com/erikras/react-redux-universal-hot-example
+This is a sample aplication utilizing Docker, Ansible and Bash to quickly provision a server and deploy a react_redux applicaiton from https://github.com/erikras/react-redux-universal-hot-example.
 
-##### IMPORTANT NOTE
-To protect this project from breaking because of unintended commits to the original project of erikras (the link above), his repo was forked into a repo of my own: https://github.com/spirit986/react-redux-universal-hot-example. This project makes its deployments form the forked repo.
+Since this project is very old I've cloned erikras' repo into my own repo from where I am pulling the boilerplate for deployment: https://github.com/spirit986/react-redux-universal-hot-example
+
+## TL;DR Quick Steps for deployment
+Read this if you do not wish to read the full guide
+#### Demo setup:
+[YOUR-LINUX-SYSTEM] -----> [TARGET-LINUX-SYSTEM][IP-ADDRESS] -----> [INTERNET]
+
+#### PHASE1 - System Deployment | From your own system
+```
+## Clone the repo
+$ git clone https://github.com/spirit986/pegbtech_demo.git && cd pegbtech_demo
+
+## Update ansible_host= inside ./hosts with the IP-ADDRESS of the TARGET-LINUX-SYSTEM
+$ vim ./hosts
+
+## Execute the playbooks
+$ ansible-playbook -i hosts --private-key=<PATH/TO/YOUR/PRIVATE/KEY> ./sys_prepare_playbook.yml
+$ ansible-playbook -i hosts --private-key=<PATH/TO/YOUR/PRIVATE/KEY> ./docker_prepare_playbook.yml
+```
+
+#### PHASE2 - Application Deployment | From the target system
+```
+## SSH to the target system
+$ ssh root@<TARGET-SYSTEM-IP> -i /YOUR/PRIVATE/KEY
+
+## Clone the repo again
+$ git clone https://github.com/spirit986/pegbtech_demo.git && cd pegbtech_demo
+
+## Deploy the containers
+$ docker-compose up -d
+
+## Update ./letsencrypt-enable.sh with the desired domain
+## Set DOMAINS=() with the desired domains
+## Set STAGING to 1 or 0
+vim ./letsencrypt-enable.sh
+
+## Execute the script
+./letsencrypt-enable.sh
+
+## Test the web service by visiting:
+## https://yourdomain.com
+## https://yourdomain.com:5443
+```
+
+# Full deployment guide
 
 ## Technologies used
 * Bash - For general scripting;
