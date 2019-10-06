@@ -17,6 +17,7 @@ To protect this project from breaking because of unintended commits to the origi
     * [pegb-certbot] - Certbot container for the TLS;
   * [pegb_api] - Python Flask - A simple API backend for demonstration;
   * [pegb_db] - MongoDB - A simple database for the backend to talk to;
+* DockerHub - To store a prebuilt image of [pegb-app] container
 
 ## Deployment steps
 In general the deployment is done in two phases. 
@@ -25,7 +26,7 @@ In general the deployment is done in two phases.
 
 ### Terminology
 * **Own system** - Your own linux system from where you will do most of the work;
-* **Target system** - The system which will serve as a host for the application. In this excersize it is called `pegbtech-docker01`;
+* **Target system** - A CentOS7 system which will serve as a host for the application. In this excersize its hostname is called `pegbtech-docker01`;
 * To avoid confusion, keep in mind that the container project folder names are written with underscores (pegb_app, pegb_web etc..) while the container names and the service names within `docker-compose.yml` are written with dashes (pegb-app, pegb-web etc).
 
 ### Prerequisites
@@ -33,7 +34,8 @@ Make sure the prerequisites are met:
 1. Fresh CentOS7 installation for the target system (currently only CentOS7 is supported);
 2. A test domain name with A and CNAME (www) records pointed to your target system's public IP address. Otherwise letsencrypt will not work; 
 3. Your own system with **ansible** and **git**, from where you will do the deployment;
-4. The target system must have access to the internet (obviously). If it is behind NAT make sure that port 80 and 443 are forwarded to it otherwise letsencrypt will fail.
+4. The target system must have access to the internet (obviously) with ports 80, 443 and 5443 opened on the firewall. If it is behind NAT make sure that port 80 and 443 are forwarded to it otherwise letsencrypt will fail. Port 5443 should also be open for the API.
+5. Once you have the **Target system** ready, make sure that you can ssh to it using public/private key authentication.
 
 ### Clone the repo
 Clone the repo on your own system:
@@ -68,14 +70,22 @@ After these steps you should have your docker server ready for the application d
 ```
 git clone https://github.com/spirit986/pegbtech_demo.git && cd pegbtech_demo
 ```
-3. Deploy the entire stack of containers using `docker-compose up -d`. Becasue building the react-redux application [pegb-app] container, consumes most of the time during the deployment the contaienr has been prebuilt and pushed to DockerHub. This step reduces the entire deployment time from 15mins to 5min or less. After the containers are deployed proceed to step 4 to generate the certificate and the NGINX configuration file. However if you wish to build all of the containers again for some reason, you can use the alternative docker-compose file provided. Use `docker-compose -f docker-compose.build.yml build && docker-compose -f docker-compose.build.yml up -d` to build and start the application manually.
+3. Deploy the entire stack of containers using `docker-compose up -d`. 
 
-4. **Enable TLS**. Once the application is deployed if you issue a `docker ps -a` you will notice that the nginx container `pegb-proxy` is down. This is because nginx is missing the required certificates. To generate the certificates use the `letsencrypt-enable.sh` script which will enable TLS according to Let's Encrypt best-practice. This is requred only once after which the certbot container will renew its certificate accordingly.
-     * **BEFORE YOU EXECUTE THE SCRIPT** - If you simply wish to test the TLS and skip the real certificate generation simply edit the `letsencrypt-enable.sh` script and set the `STAGING=1`. This way the certificate generation will be tested, but Let's Encrypt will not issue a real certificate;
-     * Edit the script and set the EMAIL variable to your email;
-     * Optionally set the STAGING=1 to just test against Let's Encrypt and skip the actual certificate generation;
-     * Execute the script using `./letsencrypt-enable.sh`;
- 5. Test your application
-     * For a simple test simply browse http://yourdomain.com. You should be redirected to https://yourdomain.com and the application will open;
-     * To test SSL browse to https://www.sslshopper.com and enter the URL of your application for which you should receive a straight A for it.
-     * To test the API browse to http://yourdomain.com:5000. You can test its DB connectivity by calling `GET /users` or `GET /posts` and list the posts or users within it.
+#### Explanation
+Because building the react-redux application [pegb-app] container consumes most deployment time, this contaienr has been prebuilt and pushed to DockerHub. This step reduces the entire deployment time from 15mins to 5min or less. After the containers are deployed proceed to step 4 to generate the certificate and the NGINX configuration file. However if you wish to build all of the containers again for some reason, you can use the alternative docker-compose file provided. Use `docker-compose -f docker-compose.build.yml build && docker-compose -f docker-compose.build.yml up -d` to build and start the application manually.
+
+4. **Enable TLS**. Once the application is deployed if you issue a `docker ps -a` you will notice that the nginx container `pegb-proxy` will not respond to any requests. This is because nginx doesn't have any configuration file loaded. To generate the configuration file for your domains and the certificates use the `letsencrypt-enable.sh` script which will enable TLS according to Let's Encrypt best-practice. This is requred only once during the initial deployment phase after which the certbot container will renew its certificate accordingly.
+
+#### BEFORE YOU EXECUTE THE SCRIPT
+1. Edit the script using vim or nano;
+2. Update the `DOMAINS=()` section with your domain. The www. domain should go second. For example: `DOMAINS=(pegtech-demo.tomspirit.me www.pegtech-demo.tomspirit.me)`;
+3. **Recommended:** Set the `EMAIL=""` to a valid email of your own.
+4. Set `STAGING=1` to 0 if you wish to actually generate a valid Let'sEncrypt certificate. Leave it to 1 to simply do a staging dry run. When you do a dry run the script will leave dummy self signed certificates for you to test your application.
+5. Execute the script using: `./letsencrypt-enable.sh`
+
+### Test your application
+1. For a simple test simply browse http://yourdomain.com. You should be redirected to https://yourdomain.com and the application will open;
+2. To test SSL browse to https://www.sslshopper.com and enter the URL of your application for which you should receive a straight A for it;
+3. To test the API browse to https://yourdomain.com:5443 where you will be presented with a page with instructions. 
+

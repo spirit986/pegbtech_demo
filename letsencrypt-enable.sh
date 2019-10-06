@@ -1,7 +1,7 @@
 #!/bin/bash
 
-## The www domain should go second
-DOMAINS=(mydomain.com www.mydomain.com)
+## The www subdomain should go second
+DOMAINS=(subdomain.domain.com www.subdomain.domain.com)
 NGINX_CONFIG_FILE="${DOMAINS[0]}.conf" ## The NGINX config file will be named based on this value
 
 RSA_KEY_SIZE=4096
@@ -65,6 +65,10 @@ upstream pegb-app {
     server pegb-app:8080;
 }
 
+upstream pegb-api {
+    server pegb-api:5000;
+}
+
 server {
     listen 80;
     server_name ${DOMAINS[0]} ${DOMAINS[1]};
@@ -93,6 +97,22 @@ server {
     location / {
         allow all;
         proxy_pass http://pegb-app;
+    }
+}
+
+server {
+    listen 5443 ssl;
+    server_name ${DOMAINS[0]};
+
+    # Letsencrypt
+    ssl_certificate /etc/letsencrypt/live/${DOMAINS[0]}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAINS[0]}/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    location / {
+        allow all;
+        proxy_pass http://pegb-api;
     }
 }
 EOF
