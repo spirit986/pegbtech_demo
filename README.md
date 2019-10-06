@@ -5,7 +5,7 @@ This is a sample aplication utilizing Docker, Ansible and Bash to quickly provis
 Since the react-redux boilerplate project is very old I forked erikras' repo into my own repo from where I am pulling the boilerplate for further deployment: https://github.com/spirit986/react-redux-universal-hot-example
 
 ##### To quickly see a working deployment browse to:
-* http://pegbtech-iaas-demo.tomspirit.me
+* https://pegbtech-iaas-demo.tomspirit.me
 
 ##### To get a preview of the API go to:
 * https://pegbtech-iaas-demo.tomspirit.me:5443
