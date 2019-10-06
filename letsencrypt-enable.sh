@@ -12,6 +12,11 @@ EMAIL="" ## Setting a valid email is reccomended
 STAGING=1 ## Set to 1 if you're testing your setup to avoid hitting request limits
 ASK=0 ## Setting this to 0 makes the script non-interactive
 
+## BUG FIX: 2019-11-06 | Set this to 1 in order to empty the config directory set into $NGINX_PATH. 
+## Usefull if you are generating a configuration for another domain.
+## ONLY CHECK THIS IF YOU KNOW WHAT YOU ARE DOING
+CLEAN_CONFIG=0
+
 ## Nginx and certbot service names from docker-compose
 NGINX_SERVICE=pegb-proxy 
 CERTBOT_SERVICE=pegb-certbot
@@ -59,7 +64,18 @@ echo
 
 
 ## Generate the new NGINX Config
-echo "### Generating the NGINX config for $DOMAINS"
+echo "### Generating NGINX config for $DOMAINS"
+echo
+if [[ $CLEAN_CONFIG -ne 0 ]]
+then
+	echo "# CLEAN_CONFIG set to 1"
+	echo "# Existing NGINX Configuration will be deleted and replaced with new in 5 seconds. Press CTRL+C to abort ..."
+	sleep 5
+	echo "# Cleaning up the config directory $NGINX_PATH"
+	rm -f $NGINX_PATH/*.conf
+	echo
+fi
+
 cat >"$NGINX_PATH/$NGINX_CONFIG_FILE" <<EOF
 upstream pegb-app {
     server pegb-app:8080;
