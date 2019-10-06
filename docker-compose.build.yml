@@ -40,12 +40,14 @@ services:
   # Pegbtech-demo the application itself
   pegb-app:
     container_name: pegb-app
-    image: spirit986/pegb-app:latest # Pre-built container to speedup the deployment process
+    image: pegb-app:latest
     environment: 
       - "HOST=0.0.0.0" # Webpack server will listen on all IPs
     ports:
       - "8080:8080"
       - "3030:3030"
+    build:
+      context: pegb_app
     restart: always
     networks:
       - pegbnet
