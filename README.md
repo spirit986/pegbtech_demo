@@ -9,6 +9,12 @@ Read this if you do not wish to read the full guide
 #### Demo setup:
 [YOUR-LINUX-SYSTEM] -----> [TARGET-LINUX-SYSTEM][IP-ADDRESS] -----> [INTERNET]
 
+Here's a short screencast from my explaining how to deploy the setup at your home.
+https://www.youtube.com/watch?v=pTqBWFRvQBQ
+
+#### DISCLAIMER:
+I am not a professional YouTubber so don't judge me for the quality of the video or the way I speak in the presentation. I find it increasingly hard to explain something to noone but my monitor.
+
 #### PHASE1 - System Deployment | From your own system
 ```
 ## Clone the repo
