@@ -35,7 +35,8 @@ $ docker-compose up -d
 
 ## Update ./letsencrypt-enable.sh with the desired domain
 ## Set DOMAINS=() with the desired domains
-## Set STAGING to 1 or 0
+## Set STAGING to 1 or 0 (default is 1)
+## Set EMAIL="" with your email address
 vim ./letsencrypt-enable.sh
 
 ## Execute the script
