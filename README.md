@@ -2,7 +2,7 @@
 
 This is a sample aplication utilizing Docker, Ansible and Bash to quickly provision a server and deploy a react_redux applicaiton from https://github.com/erikras/react-redux-universal-hot-example.
 
-Since this project is very old I've cloned erikras' repo into my own repo from where I am pulling the boilerplate for deployment: https://github.com/spirit986/react-redux-universal-hot-example
+Since the react-redux boilerplate project is very old I forked erikras' repo into my own repo from where I am pulling the boilerplate for further deployment: https://github.com/spirit986/react-redux-universal-hot-example
 
 ## TL;DR Quick Steps for deployment
 Read this if you do not wish to read the full guide
